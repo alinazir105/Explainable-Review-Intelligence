@@ -59,3 +59,17 @@ def clean_review_text(df):
     """
     df['text'] = df['text'].str.strip()
     return df
+
+
+def convert_boolean_attributes(df):
+    """
+    Convert attributes that are stored as strings but represent boolean values into actual boolean columns.
+    """
+    attributes_df = df.filter(like='attributes_')
+    for col in attributes_df.columns:
+        unique_values = attributes_df[col].dropna().unique()
+        unique_values = [v for v in unique_values if v is not None]
+        if set(unique_values).issubset({True, False}):
+            df[col] = df[col].astype('boolean')
+
+    return df
